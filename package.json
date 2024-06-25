@@ -1,0 +1,19 @@
+{
+  "name": "undefined",
+  "version": "1.0.0",
+  "description": "jogo 2d",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Gabriel Hipólito",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4",
+    "socket.io": "^4.7.5",
+    "socketio": "^1.0.0"
+  }
+}
