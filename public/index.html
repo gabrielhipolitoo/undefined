@@ -3,9 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Undefined</title>
   </head>
   <body>
-    <script src="./"></script>
+    <canvas width="20" height="20" id="canvas"></canvas>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+      import renderScreen from './renderScreen.js'
+      import createGame from './createGame.js'
+      import keyboardListener from './keyboardListener.js'
+      const screen = document.getElementById('canvas')
+      const game = createGame(screen)
+      const socket = io()
+      const keyboardEvent = keyboardListener(document, game)
+
+      keyboardEvent.obsorvers.subscribe(game.movePlayer)
+      keyboardEvent.obsorvers.subscribe((command) => {
+        socket.emit('move-player', command)
+      })
+      socket.on('connect', () => {})
+
+      socket.on('setup-game', (data) => {})
+
+      socket.on('add-player', (data) => {
+        console.log(data)
+        game.addPlayers(data)
+      })
+
+      socket.on('move-player', (data) => {
+        console.log(data)
+        game.movePlayer(data)
+      })
+
+      renderScreen(screen, game, requestAnimationFrame)
+    </script>
   </body>
 </html>

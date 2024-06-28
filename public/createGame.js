@@ -1,43 +1,45 @@
 import Obsorvers from './Obsorvers.js'
 
 export default function createGame(screen) {
+  const obsorvers = new Obsorvers()
   const state = {
     players: {},
     items: {},
+    screen: {
+      width: 20,
+      height: 20,
+    },
+  }
+
+  function setState(newState) {
+    Object.assign(state, newState)
   }
 
   function movePlayer(command) {
+    obsorvers.notifyAll({
+      type: 'move-player',
+      command,
+    })
     const { playerId, keyPressed } = command
     const player = state['players'][playerId]
-    console.log(keyPressed)
-    console.log('move-player player')
-    // if (e.key === 'ArrowUp') {
-    //   console.log((player.y -= 1))
-    // }
-    // if (e.key === 'ArrowDown') {
-    //   teste.notifyAll('teste')
-    // }
     const movements = {
       ArrowDown(player) {
-        if (player.y < screen.height - 1) {
+        if (player.y < state.screen.height - 1) {
           player.y += 1
-          console.log(screen.height, player.y)
         }
       },
       ArrowUp(player) {
         if (player.y >= 0 + 1) {
           player.y -= 1
-          console.log(screen.height, player.y)
         }
       },
       ArrowLeft(player) {
         if (player.x - 1 >= 0) {
           player.x -= 1
-          console.log(screen.height, player.y)
         }
       },
       ArrowRight(player) {
-        if (player.x + 1 < screen.width) {
+        if (player.x + 1 < state.screen.width) {
           player.x += 1
         }
       },
@@ -49,12 +51,13 @@ export default function createGame(screen) {
     }
   }
 
-  function addPlayers(commad) {
-    const playerId = commad.playerId
-    const playerName = commad.playerName
-    const playerColor = commad.playerColor
-    const playerX = commad.playerX
-    const playerY = commad.playerY
+  function addPlayers(command) {
+    console.log('Player adicionado')
+    const playerId = command.playerId
+    const playerName = command.playerName
+    const playerColor = command.playerColor
+    const playerX = command.playerX
+    const playerY = command.playerY
 
     state.players[playerId] = {
       name: playerName,
@@ -62,7 +65,10 @@ export default function createGame(screen) {
       x: playerX,
       y: playerY,
     }
+    obsorvers.notifyAll({ type: 'add-player', command })
   }
-
-  return { state, addPlayers, movePlayer }
+  console.log(state)
+  return { state, addPlayers, movePlayer, setState, obsorvers }
 }
+
+//mover o player
