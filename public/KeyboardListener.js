@@ -1,6 +1,6 @@
-import Obsorvers from './Obsorvers.js'
+import Observers from './Observers.js'
 export default function keyboardListener() {
-  const obsorvers = new Obsorvers()
+  const observers = new Observers()
 
   function handleKeyboard(e) {
     const keyPressed = e.key
@@ -10,12 +10,12 @@ export default function keyboardListener() {
       keyPressed,
     }
 
-    obsorvers.notifyAll(command)
+    observers.notifyAll(command)
   }
 
   document.addEventListener('keydown', handleKeyboard)
 
   return {
-    obsorvers,
+    observers,
   }
 }

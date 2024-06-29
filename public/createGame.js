@@ -1,7 +1,7 @@
-import Obsorvers from './Obsorvers.js'
+import Observers from './Observers.js'
 
 export default function createGame(screen) {
-  const obsorvers = new Obsorvers()
+  const observers = new Observers()
   const state = {
     players: {},
     items: {},
@@ -16,8 +16,7 @@ export default function createGame(screen) {
   }
 
   function movePlayer(command) {
-    console.log(state)
-    obsorvers.notifyAll({
+    observers.notifyAll({
       type: 'move-player',
       command,
     })
@@ -53,7 +52,7 @@ export default function createGame(screen) {
   }
 
   function addPlayers(command) {
-    console.log('Player adicionado')
+    console.log('Player adicionado', command.playerId)
     const playerId = command.playerId
     const playerName = command.playerName
     const playerColor = command.playerColor
@@ -61,21 +60,22 @@ export default function createGame(screen) {
     const playerY = command.playerY
 
     state.players[playerId] = {
+      id:playerId,
       name: playerName,
       color: playerColor,
       x: playerX,
       y: playerY,
     }
-    obsorvers.notifyAll({ type: 'add-player', command })
+    observers.notifyAll({ type: 'add-player', command })
   }
 
   function desconectPlayer(command) {
     const player = command
     delete state.players[player]
     console.log('saiu', command)
-    obsorvers.notifyAll({ type: 'desconect-player', command })
+    observers.notifyAll({ type: 'desconect-player', command })
   }
-  return { state, addPlayers, movePlayer, desconectPlayer, setState, obsorvers }
+  return { state, addPlayers, movePlayer, desconectPlayer, setState, observers }
 }
 
 //mover o player

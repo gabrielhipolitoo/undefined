@@ -17,13 +17,16 @@
       const game = createGame(screen)
       const socket = io()
       const keyboardEvent = keyboardListener(document, game)
-
-      keyboardEvent.obsorvers.subscribe(game.movePlayer)
-      keyboardEvent.obsorvers.subscribe((command) => {
+      keyboardEvent.observers.subscribe(game.movePlayer)
+      keyboardEvent.observers.subscribe((command) => {
         socket.emit('move-player', command)
       })
       socket.on('connect', () => {})
-
+      socket.on("playerId",(data) => {
+      const currentPlayer = data
+      renderScreen(screen, game, requestAnimationFrame,currentPlayer)
+        
+      })
       socket.on('setup-game', (data) => {
         game.setState(data)
         console.log(data)
@@ -35,13 +38,13 @@
 
       socket.on('move-player', (data) => {
         game.movePlayer(data)
-      })
+    })
 
       socket.on('desconect-player', (data) => {
         console.log(`o player ${data} desconectou`)
         game.desconectPlayer(data)
       })
-
+       
       renderScreen(screen, game, requestAnimationFrame)
     </script>
   </body>

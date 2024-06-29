@@ -31,25 +31,26 @@ class CreateServer {
 
   socketsOn(sockets) {
     const game = createGame()
-    game.obsorvers.subscribe((data) => {
+    game.observers.subscribe((data) => {
       console.log('Emmiting -->', data.type)
       sockets.emit(data.type, data.command)
     })
     sockets.on('connection', (socket) => {
       const playerObj = {
         playerId: socket.id,
-        playerColor: 'blue',
-        playerX: 5,
-        playerY: 8,
+        playerColor: 'gray',
+        playerX: Math.floor(Math.random() * 20),
+        playerY: Math.floor(Math.random() * 20),
       }
       game.addPlayers(playerObj)
-
+      socket.emit('setup-game', game.state)
+      socket.emit('playerId', socket.id)
+      
       socket.on('move-player', (command) => {
         command.playerId = socket.id
         command.type = 'move-player'
         game.movePlayer(command)
         console.log(game.state)
-        sockets.emit('setup-game', game.state)
       })
 
       socket.on('disconnect', () => {
