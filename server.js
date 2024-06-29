@@ -48,10 +48,20 @@ class CreateServer {
         command.playerId = socket.id
         command.type = 'move-player'
         game.movePlayer(command)
+        console.log(game.state)
+        sockets.emit('setup-game', game.state)
+      })
+
+      socket.on('disconnect', () => {
+        console.log('saiu', socket.id)
+        game.desconectPlayer(socket.id)
+      })
+
+      socket.on('setup-game', (data) => {
+        game.setState(data)
+        console.log(data)
       })
     })
-
-    sockets.emit('setup-game', game.state)
   }
 }
 

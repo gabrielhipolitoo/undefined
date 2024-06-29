@@ -16,6 +16,7 @@ export default function createGame(screen) {
   }
 
   function movePlayer(command) {
+    console.log(state)
     obsorvers.notifyAll({
       type: 'move-player',
       command,
@@ -67,8 +68,14 @@ export default function createGame(screen) {
     }
     obsorvers.notifyAll({ type: 'add-player', command })
   }
-  console.log(state)
-  return { state, addPlayers, movePlayer, setState, obsorvers }
+
+  function desconectPlayer(command) {
+    const player = command
+    delete state.players[player]
+    console.log('saiu', command)
+    obsorvers.notifyAll({ type: 'desconect-player', command })
+  }
+  return { state, addPlayers, movePlayer, desconectPlayer, setState, obsorvers }
 }
 
 //mover o player

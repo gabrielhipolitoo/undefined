@@ -24,16 +24,22 @@
       })
       socket.on('connect', () => {})
 
-      socket.on('setup-game', (data) => {})
+      socket.on('setup-game', (data) => {
+        game.setState(data)
+        console.log(data)
+      })
 
       socket.on('add-player', (data) => {
-        console.log(data)
         game.addPlayers(data)
       })
 
       socket.on('move-player', (data) => {
-        console.log(data)
         game.movePlayer(data)
+      })
+
+      socket.on('desconect-player', (data) => {
+        console.log(`o player ${data} desconectou`)
+        game.desconectPlayer(data)
       })
 
       renderScreen(screen, game, requestAnimationFrame)
