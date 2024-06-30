@@ -3,13 +3,13 @@ class Observers {
     this.observers = []
   }
 
-  subscribe(obsorverFunctio) {
-    this.observers.push(obsorverFunctio)
+  subscribe(observerFunctio) {
+    this.observers.push(observerFunctio)
   }
 
   notifyAll(command) {
     console.log(`Notifying ${this.observers.length} observers`)
-    this.observers.forEach((obsorverFunctio) => obsorverFunctio(command))
+    this.observers.forEach((observerFunctio) => observerFunctio(command))
   }
 
    seeSubscribe() {

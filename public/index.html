@@ -27,6 +27,7 @@
         
       })
       socket.on('setup-game', (data) => {
+        console.log(data)
         game.setState(data)
       })
 
@@ -37,9 +38,14 @@
       socket.on('add-fruits', (data) => {
         game.addFruits(data)
       })
+
+      socket.on('get-fruits', (data) => {
+        game.getFruits(data)
+    })
       socket.on('move-player', (data) => {
         game.movePlayer(data)
     })
+    
 
       socket.on('desconect-player', (data) => {
         console.log(`o player ${data} desconectou`)

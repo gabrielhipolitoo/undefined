@@ -37,14 +37,9 @@ class CreateServer {
       sockets.emit(data.type, data.command)
     })
     sockets.on('connection', (socket) => {
-      const playerObj = {
-        playerId: socket.id,
-        playerColor: 'gray',
-        playerX: Math.floor(Math.random() * 20),
-        playerY: Math.floor(Math.random() * 20),
-      }
       
-      game.addPlayers(playerObj)
+      
+      game.addPlayers({playerId: socket.id,})
       socket.emit('setup-game', game.state)
       socket.emit('playerId', socket.id)
       
@@ -53,6 +48,11 @@ class CreateServer {
         command.type = 'move-player'
         game.movePlayer(command)
         console.log(game.state)
+      })
+
+      socket.on('get-fruits', (command) => {
+        command.playerId = socket.id
+        game.getFruits(command)
       })
 
       socket.on('disconnect', () => {
