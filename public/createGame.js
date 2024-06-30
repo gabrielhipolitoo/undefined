@@ -20,7 +20,9 @@ export default function createGame() {
       type: 'move-player',
       command,
     })
-    const { playerId, keyPressed } = command
+    console.log(command)
+    const keyPressed = command.keyPressed
+    const playerId = command.playerId
     const player = state['players'][playerId]
     const movements = {
       ArrowDown(player) {
@@ -49,26 +51,65 @@ export default function createGame() {
     if (player && callMovements) {
       callMovements(player)
     }
+    getFruits()
   }
 
-  function fruitStart(){
+  function fruitStart() {
     const frequency = 3000
 
-    setInterval(addFruits,frequency)
+    setInterval(addFruits, frequency)
   }
-  function addFruits(command){
-    const fruitId = command ? command.fruitId : Math.floor(Math.random() * 10000000)
-    const fruitX = command ? command.x : Math.floor(Math.random() * state.screen.width)
-    const fruitY = command ? command.y : Math.floor(Math.random() * state.screen.height)
-    const color = "green"
+  function addFruits(command) {
+    console.log(command)
+    const fruitId = command ? command.id : Math.floor(Math.random() * 10000000)
+    const fruitX = command
+      ? command.x
+      : Math.floor(Math.random() * state.screen.width)
+    const fruitY = command
+      ? command.y
+      : Math.floor(Math.random() * state.screen.height)
+    const color = 'green'
 
-  state.fruits[fruitId] = {
-    fruitId: fruitId,
-    color:color,
-    x:fruitX,
-    y:fruitY,
+    state.fruits[fruitId] = {
+      id: fruitId,
+      color: color,
+      x: fruitX,
+      y: fruitY,
+    }
+    // const command = {
+    //   id: fruitId,
+    //   x: fruitX,
+    //   y: fruitY,
+    // }
+    observers.notifyAll({
+      type: 'add-fruits',
+      id: fruitId,
+      x: fruitX,
+      y: fruitY,
+    })
   }
-  observers.notifyAll({type:"add-fruits",command})
+
+  function getFruits(command) {
+    for (const fruitId in state['fruits']) {
+      const fruit = state['fruits'][fruitId]
+      for (const playerId in state['players']) {
+        const player = state['players'][playerId]
+        if (player.x === fruit.x && player.y === fruit.y) {
+          console.log('vc achou')
+          removeFruits(player, fruit)
+        }
+      }
+    }
+    observers.notifyAll({ type: 'get-fruits', command })
+  }
+
+  function removeFruits(player, fruit) {
+    const command = {
+      fruit: fruit.id,
+      player: player.id,
+    }
+    const fruitId = fruit.id
+    delete state.fruits[fruitId]
   }
   function addPlayers(command) {
     console.log('Player adicionado', command.playerId)
@@ -78,8 +119,8 @@ export default function createGame() {
     const playerY = command.playerY
 
     state.players[playerId] = {
-      id:playerId,
-      color:playerColor,
+      id: playerId,
+      color: playerColor,
       x: playerX,
       y: playerY,
     }
@@ -92,7 +133,17 @@ export default function createGame() {
     console.log('saiu', command)
     observers.notifyAll({ type: 'desconect-player', command })
   }
-  return { state, addPlayers, movePlayer, desconectPlayer, setState, observers, addFruits,fruitStart}
+  return {
+    state,
+    addPlayers,
+    movePlayer,
+    desconectPlayer,
+    setState,
+    observers,
+    addFruits,
+    getFruits,
+    fruitStart,
+  }
 }
 
 //mover o player

@@ -21,10 +21,9 @@
       keyboardEvent.observers.subscribe((command) => {
         socket.emit('move-player', command)
       })
-      socket.on("playerId",(data) => {
-      const currentPlayer = data
-      renderScreen(screen, game, requestAnimationFrame,currentPlayer)
-        
+      socket.on('playerId', (data) => {
+        const currentPlayer = data
+        renderScreen(screen, game, requestAnimationFrame, currentPlayer)
       })
       socket.on('setup-game', (data) => {
         game.setState(data)
@@ -35,17 +34,21 @@
       })
 
       socket.on('add-fruits', (data) => {
+        console.log(data)
         game.addFruits(data)
+      })
+      socket.on('get-fruits', (data) => {
+        game.getFruits(data)
       })
       socket.on('move-player', (data) => {
         game.movePlayer(data)
-    })
+      })
 
       socket.on('desconect-player', (data) => {
         console.log(`o player ${data} desconectou`)
         game.desconectPlayer(data)
       })
-       
+
       renderScreen(screen, game, requestAnimationFrame)
     </script>
   </body>
