@@ -1,10 +1,10 @@
 import Observers from './Observers.js'
 
-export default function createGame(screen) {
+export default function createGame() {
   const observers = new Observers()
   const state = {
     players: {},
-    items: {},
+    fruits: {},
     screen: {
       width: 20,
       height: 20,
@@ -51,18 +51,35 @@ export default function createGame(screen) {
     }
   }
 
+  function fruitStart(){
+    const frequency = 3000
+
+    setInterval(addFruits,frequency)
+  }
+  function addFruits(command){
+    const fruitId = command ? command.fruitId : Math.floor(Math.random() * 10000000)
+    const fruitX = command ? command.x : Math.floor(Math.random() * state.screen.width)
+    const fruitY = command ? command.y : Math.floor(Math.random() * state.screen.height)
+    const color = "green"
+
+  state.fruits[fruitId] = {
+    fruitId: fruitId,
+    color:color,
+    x:fruitX,
+    y:fruitY,
+  }
+  observers.notifyAll({type:"add-fruits",command})
+  }
   function addPlayers(command) {
     console.log('Player adicionado', command.playerId)
     const playerId = command.playerId
-    const playerName = command.playerName
-    const playerColor = command.playerColor
+    const playerColor = command.color
     const playerX = command.playerX
     const playerY = command.playerY
 
     state.players[playerId] = {
       id:playerId,
-      name: playerName,
-      color: playerColor,
+      color:playerColor,
       x: playerX,
       y: playerY,
     }
@@ -75,7 +92,7 @@ export default function createGame(screen) {
     console.log('saiu', command)
     observers.notifyAll({ type: 'desconect-player', command })
   }
-  return { state, addPlayers, movePlayer, desconectPlayer, setState, observers }
+  return { state, addPlayers, movePlayer, desconectPlayer, setState, observers, addFruits,fruitStart}
 }
 
 //mover o player

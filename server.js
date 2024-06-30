@@ -9,7 +9,7 @@ class CreateServer {
   constructor() {
     const dataConnection = this.startServer().sockets
     this.socketsOn(dataConnection)
-  }
+  } 
 
   startServer() {
     const app = express()
@@ -31,6 +31,7 @@ class CreateServer {
 
   socketsOn(sockets) {
     const game = createGame()
+    game.fruitStart()
     game.observers.subscribe((data) => {
       console.log('Emmiting -->', data.type)
       sockets.emit(data.type, data.command)
@@ -42,6 +43,7 @@ class CreateServer {
         playerX: Math.floor(Math.random() * 20),
         playerY: Math.floor(Math.random() * 20),
       }
+      
       game.addPlayers(playerObj)
       socket.emit('setup-game', game.state)
       socket.emit('playerId', socket.id)
@@ -57,10 +59,9 @@ class CreateServer {
         console.log('saiu', socket.id)
         game.desconectPlayer(socket.id)
       })
-
+      
       socket.on('setup-game', (data) => {
         game.setState(data)
-        console.log(data)
       })
     })
   }

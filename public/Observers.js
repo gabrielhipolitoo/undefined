@@ -11,6 +11,10 @@ class Observers {
     console.log(`Notifying ${this.observers.length} observers`)
     this.observers.forEach((obsorverFunctio) => obsorverFunctio(command))
   }
+
+   seeSubscribe() {
+      console.log(this.observers)   
+  }
 }
 
 export default Observers

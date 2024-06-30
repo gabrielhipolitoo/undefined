@@ -9,6 +9,7 @@ export default function keyboardListener() {
       playerId: '',
       keyPressed,
     }
+    observers.seeSubscribe()
 
     observers.notifyAll(command)
   }
