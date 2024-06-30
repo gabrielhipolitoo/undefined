@@ -68,8 +68,6 @@ export default function createGame() {
       callMovements(player)
     }
   }
-
-  
   
   function fruitStart(){
     const frequency = 3000
@@ -120,6 +118,7 @@ export default function createGame() {
     delete state.fruits[fruitId]
   }
 
+  
   
   function desconectPlayer(command) {
     const player = command
