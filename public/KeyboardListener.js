@@ -5,11 +5,10 @@ export default function keyboardListener() {
   function handleKeyboard(e) {
     const keyPressed = e.key
     const command = {
-      type: 'move-player',
       playerId: '',
       keyPressed,
     }
-    observers.seeSubscribe()
+    // observers.seeSubscribe()
 
     observers.notifyAll(command)
   }

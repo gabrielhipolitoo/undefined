@@ -37,7 +37,9 @@ export default function createGame() {
       type: 'move-player',
       command,
     })
-    const { playerId, keyPressed } = command
+    console.log(command)
+    const keyPressed = command.keyPressed
+    const playerId = command.playerId
     const player = state['players'][playerId]
     const movements = {
       ArrowDown(player) {
@@ -67,13 +69,14 @@ export default function createGame() {
       getFruits()
       callMovements(player)
     }
-  }
-  
-  function fruitStart(){
-    const frequency = 3000
-    setInterval(addFruits,frequency)
+    getFruits()
   }
 
+  function fruitStart(){
+    const frequency = 3000
+
+    setInterval(addFruits,frequency)
+  }
   function addFruits(command){
     const fruitId = command ? command.fruitId : Math.floor(Math.random() * 10000000)
     const fruitX = command ? command.x : Math.floor(Math.random() * state.screen.width)
@@ -81,30 +84,25 @@ export default function createGame() {
     const color = "green"
 
   state.fruits[fruitId] = {
-    id: fruitId,
-    color:color,
-    x:fruitX,
-    y:fruitY,
-  }
-
-  observers.notifyAll({type:"add-fruits",command:{
     fruitId: fruitId,
     color:color,
     x:fruitX,
     y:fruitY,
-  }})
   }
-  function getFruits(command) {
-    for (const fruitId in state['fruits']) {
-      const fruit = state['fruits'][fruitId]
-      for (const playerId in state['players']) {
-        const player = state['players'][playerId]
-        if (player.x === fruit.x && player.y === fruit.y) {
-          console.log(player.points +=1)
-          console.log('vc achou')
-          removeFruits(player, fruit)
-        }
-      }
+  observers.notifyAll({type:"add-fruits",command})
+  }
+  function addPlayers(command) {
+    console.log('Player adicionado', command.playerId)
+    const playerId = command.playerId
+    const playerColor = command.color
+    const playerX = command.playerX
+    const playerY = command.playerY
+
+    state.players[playerId] = {
+      id:playerId,
+      color:playerColor,
+      x: playerX,
+      y: playerY,
     }
     observers.notifyAll({ type: 'get-fruits', command })
   }
@@ -126,7 +124,7 @@ export default function createGame() {
     console.log('saiu', command)
     observers.notifyAll({ type: 'desconect-player', command })
   }
-  return { state, addPlayers,getFruits, movePlayer, desconectPlayer, setState, observers, addFruits,fruitStart}
+  return { state, addPlayers, movePlayer, desconectPlayer, setState, observers, addFruits,fruitStart}
 }
 
 //mover o player
